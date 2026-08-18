@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,4 +38,3 @@ jobs:
       - name: Generate logs
         run: |
           echo "CI pipeline completed successfully"
-          
