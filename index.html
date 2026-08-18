@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WeatherFlow – Live Weather Dashboard</title>
+  <meta name="description" content="A beautiful, interactive weather dashboard showing real-time dummy weather data for cities around the world." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background animated blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <span class="logo-icon">🌤</span>
+          <span class="logo-text">WeatherFlow</span>
+        </div>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="search-wrap">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search city..." autocomplete="off" />
+        <span class="search-icon">🔍</span>
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+
+      <nav class="city-list" id="cityList" aria-label="City navigation"></nav>
+
+      <div class="unit-toggle">
+        <span class="unit-label">°C</span>
+        <label class="toggle-switch" for="unitToggle">
+          <input type="checkbox" id="unitToggle" />
+          <span class="slider"></span>
+        </label>
+        <span class="unit-label">°F</span>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main">
+
+      <!-- Top Bar -->
+      <header class="topbar">
+        <button class="menu-btn" id="menuBtn" aria-label="Open sidebar">☰</button>
+        <div class="topbar-right">
+          <span class="current-date" id="currentDate"></span>
+          <span class="live-badge">● LIVE</span>
+        </div>
+      </header>
+
+      <!-- Hero Card -->
+      <section class="hero-card glass" id="heroCard">
+        <div class="hero-left">
+          <div class="hero-location" id="heroLocation">
+            <span class="location-icon">📍</span>
+            <span id="heroCity">Mumbai</span>
+            <span id="heroCountry">, India</span>
+          </div>
+          <div class="hero-temp" id="heroTemp">32°C</div>
+          <div class="hero-desc" id="heroDesc">Partly Cloudy</div>
+          <div class="hero-feels">Feels like <span id="heroFeels">35°C</span></div>
+
+          <div class="hero-stats">
+            <div class="stat-chip">
+              <span class="stat-icon">💧</span>
+              <div>
+                <div class="stat-val" id="heroHumidity">78%</div>
+                <div class="stat-key">Humidity</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-icon">💨</span>
+              <div>
+                <div class="stat-val" id="heroWind">18 km/h</div>
+                <div class="stat-key">Wind</div>
+              </div>
+            </div>
+            <div class="stat-chip">
+              <span class="stat-icon">👁</span>
+              <div>
+                <div class="stat-val" id="heroVis">9 km</div>
+                <div class="stat-key">Visibility</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-right">
+          <div class="weather-icon-wrap" id="heroIcon">⛅</div>
+          <div class="hero-hi-lo">
+            <span class="hi">H: <span id="heroHigh">34°C</span></span>
+            <span class="lo">L: <span id="heroLow">27°C</span></span>
+          </div>
+          <div class="aqi-badge" id="heroAqi">AQI 142 · Unhealthy</div>
+        </div>
+      </section>
+
+      <!-- Hourly Forecast -->
+      <section class="section">
+        <h2 class="section-title">Hourly Forecast</h2>
+        <div class="hourly-scroll">
+          <div class="hourly-track" id="hourlyTrack"></div>
+        </div>
+      </section>
+
+      <!-- Grid: Weekly + Details -->
+      <div class="bottom-grid">
+
+        <!-- Weekly Forecast -->
+        <section class="section weekly-section">
+          <h2 class="section-title">7-Day Forecast</h2>
+          <div class="weekly-list" id="weeklyList"></div>
+        </section>
+
+        <!-- Extra Details -->
+        <section class="section details-section">
+          <h2 class="section-title">Details</h2>
+          <div class="details-grid" id="detailsGrid"></div>
+        </section>
+
+      </div>
+
+      <!-- UV Index Bar -->
+      <section class="section uv-section glass">
+        <h2 class="section-title" style="margin-bottom:1rem;">UV Index</h2>
+        <div class="uv-bar-wrap">
+          <div class="uv-bar">
+            <div class="uv-fill" id="uvFill"></div>
+            <div class="uv-thumb" id="uvThumb"></div>
+          </div>
+          <div class="uv-labels">
+            <span>Low</span><span>Moderate</span><span>High</span><span>Very High</span><span>Extreme</span>
+          </div>
+        </div>
+        <p class="uv-message" id="uvMessage"></p>
+      </section>
+
+      <!-- Sunrise / Sunset -->
+      <section class="section sun-section glass">
+        <h2 class="section-title">Sun</h2>
+        <div class="sun-arc-wrap">
+          <svg class="sun-arc" viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#f97316"/>
+                <stop offset="100%" stop-color="#facc15"/>
+              </linearGradient>
+            </defs>
+            <path d="M 20 140 Q 150 10 280 140" stroke="#ffffff18" stroke-width="3" fill="none"/>
+            <path class="arc-progress" id="arcProgress" d="M 20 140 Q 150 10 280 140" stroke="url(#arcGrad)" stroke-width="3" fill="none" stroke-dasharray="340" stroke-dashoffset="170"/>
+            <circle class="sun-dot" id="sunDot" cx="150" cy="75" r="10" fill="#facc15"/>
+          </svg>
+          <div class="sun-times">
+            <div class="sun-time-item">
+              <span>🌅</span>
+              <span class="sun-time-val" id="sunriseTime">06:14 AM</span>
+              <span class="sun-time-key">Sunrise</span>
+            </div>
+            <div class="sun-time-item">
+              <span>🌇</span>
+              <span class="sun-time-val" id="sunsetTime">07:08 PM</span>
+              <span class="sun-time-key">Sunset</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
