@@ -25,6 +25,11 @@ jobs:
           test -f style.css
           echo "CSS file found"
 
+      - name: Check JavaScript file
+        run: |
+          test -f script.js
+          echo "JavaScript file found"
+
       - name: Build
         run: |
           echo "Building e-commerce website..."
@@ -33,3 +38,17 @@ jobs:
       - name: Generate logs
         run: |
           echo "CI pipeline completed successfully"
+
+      - name: Send Slack notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            MESSAGE="✅ CI Pipeline succeeded for ${{ github.repository }}"
+          else
+            MESSAGE="❌ CI Pipeline failed for ${{ github.repository }}"
+          fi
+
+          curl -X POST \
+            -H "Content-type: application/json" \
+            --data "{\"text\":\"$MESSAGE\"}" \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
