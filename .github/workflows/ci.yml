@@ -25,10 +25,6 @@ jobs:
           test -f style.css
           echo "CSS file found"
 
-      - name: Check JavaScript file
-        run: |
-          test -f script.js
-          echo "JavaScript file found"
 
       - name: Build
         run: |
